@@ -1,0 +1,28 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Task
+        uses: go-task/setup-task@v1
+      - name: Check out repository code
+        uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "./services/go/api-golang/go.mod"
+          cache-dependency-path: "./services/go/api-golang/go.sum"
+      - name: Run Test
+        working-directory: services/go/api-golang
+        run: |
+          task test
