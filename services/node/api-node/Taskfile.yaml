@@ -1,0 +1,33 @@
+version: "3"
+
+vars:
+  DATABASE_URL: "postgres://postgres:foobarbaz@localhost:5432/postgres"
+  IMAGE_REPO: sidpalas/devops-directive-docker-course-api-node
+  IMAGE_TAG: foobarbaz
+  SERVICE_RELEASE_TAG: services/node/api-node
+
+includes:
+  utils:
+    taskfile: ../../../utils/Taskfile.yaml
+    dir: ../../../utils
+
+tasks:
+  install:
+    desc: install dependencies
+    cmds:
+      - npm install
+
+  install-ci:
+    desc: install/download package dependencies
+    cmds:
+      - npm ci
+
+  run:
+    desc: Start node api
+    cmds:
+      - DATABASE_URL={{.DATABASE_URL}} npm run dev
+
+  test:
+    desc: run tests
+    cmds:
+      - npm run test
