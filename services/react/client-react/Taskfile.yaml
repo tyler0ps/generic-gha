@@ -1,0 +1,32 @@
+version: "3"
+
+vars:
+  IMAGE_REPO: sidpalas/devops-directive-docker-course-client-react-nginx
+  IMAGE_TAG: foobarbaz
+  SERVICE_RELEASE_TAG: services/react/client-react
+
+includes:
+  utils:
+    taskfile: ../../../utils/Taskfile.yaml
+    dir: ../../../utils
+
+tasks:
+  install:
+    desc: install dependencies
+    cmds:
+      - npm install
+
+  install-ci:
+    desc: install/download package dependencies
+    cmds:
+      - npm ci
+
+  run:
+    desc: Start react client
+    cmds:
+      - npm run dev
+
+  test:
+    desc: run tests
+    cmds:
+      - npm run test
