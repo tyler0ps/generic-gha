@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  generate-version:
+    desc: "Use git describe to generate a tag based on the latest release tag"
+    vars:
+      SERVICE_RELEASE_TAG: "{{.CLI_ARGS}}"
+    cmds:
+      - |
+        set -euo pipefail
+        TAG=$(git describe --tags --always --first-parent --match "{{.SERVICE_RELEASE_TAG}}@[0-9]*.[0-9]*.[0-9]*")
+        PREFIX="{{.SERVICE_RELEASE_TAG}}@"
+        echo "${TAG#${PREFIX}}"
+    silent: true
