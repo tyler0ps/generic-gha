@@ -1,0 +1,61 @@
+name: "Setup dependencies"
+
+description: "Setup dependencies"
+
+inputs:
+  # Task
+  install_task:
+    description: "Install Task"
+    default: "true"
+  task_version:
+    description: "Version of Task to install"
+    default: "3.45.5"
+
+  # Languages
+  install_go:
+    description: "Install Go"
+    default: "false"
+  install_node:
+    description: "Install Node"
+    default: "false"
+  install_python:
+    description: "Install Python"
+    default: "false"
+  service_path:
+    description: "Path to the service (used to setup dependencies)"
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    # Task
+    - name: Install Task
+      if: ${{ inputs.install_task == 'true' }}
+      uses: go-task/setup-task@v1
+      with:
+        version: ${{ inputs.task_version }}
+
+    # Languages
+    - name: Setup Go
+      if: ${{ inputs.install_go == 'true' }}
+      uses: actions/setup-go@v6
+      with:
+        go-version-file: "./${{ inputs.service_path }}/go.mod"
+        cache-dependency-path: "./${{ inputs.service_path }}/go.sum"
+    - name: Setup Node
+      if: ${{ inputs.install_node == 'true' }}
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: "./${{ inputs.service_path }}/package.json"
+        cache: "npm"
+        cache-dependency-path: "./${{ inputs.service_path }}/package-lock.json"
+    - name: Install Poetry
+      if: ${{ inputs.install_python == 'true' }}
+      uses: snok/install-poetry@v1
+    - name: Setup Python
+      if: ${{ inputs.install_python == 'true' }}
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: ./${{ inputs.service_path }}/pyproject.toml
+        cache: poetry
+        cache-dependency-path: ./${{ inputs.service_path }}/poetry.lock

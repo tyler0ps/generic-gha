@@ -1,6 +1,19 @@
 name: Run Tests
 on:
   workflow_dispatch:
+    inputs:
+      service:
+        description: "Select a service to test"
+        required: false
+        type: choice
+        default: "all"
+        options:
+          - all
+          - services/go/api-golang
+          - services/node/api-node
+          - services/python/load-generator-python
+          - services/react/client-react
+          - services/other/api-golang-migrator
   push:
     branches:
       - main
@@ -18,22 +31,27 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      services: ${{ steps.filter.outputs.changes }}
+      services: ${{ steps.set-services.outputs.services }}
     steps:
       - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v3
+      - name: Filter changed paths
+        if: github.event_name != 'workflow_dispatch'
+        uses: dorny/paths-filter@v3
         id: filter
         with:
-          filters: |
-            services/go/api-golang:
-              - 'services/go/api-golang/**'
-              - 'services/other/api-golang-migrator/**'
-            services/node/api-node:
-              - 'services/node/api-node/**'
-            services/python/load-generator-python:
-              - 'services/python/load-generator-python/**'
-            services/react/client-react:
-              - 'services/react/client-react/**'
+          filters: .github/utils/file-filters.yaml
+      - name: Set services matrix
+        id: set-services
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.service }}" = "all" ] || [ -z "${{ github.event.inputs.service }}" ]; then
+              echo 'services=["services/go/api-golang","services/node/api-node","services/react/client-react","services/python/load-generator-python","services/other/api-golang-migrator"]' >> $GITHUB_OUTPUT
+            else
+              echo 'services=["${{ github.event.inputs.service }}"]' >> $GITHUB_OUTPUT
+            fi
+          else
+            echo 'services=${{ steps.filter.outputs.changes }}' >> $GITHUB_OUTPUT
+          fi
 
   unit-test:
     runs-on: ubuntu-latest
@@ -42,39 +60,20 @@ jobs:
       matrix:
         service: ${{ fromJson(needs.changes.outputs.services) }}
     steps:
-      - name: Install Task
-        uses: go-task/setup-task@v1
-      - name: Check out repository code
-        uses: actions/checkout@v6
-      - name: Setup Go
-        if: ${{ startsWith(matrix.service, 'services/go') }}
-        uses: actions/setup-go@v6
+      - uses: actions/checkout@v6
+      - name: Setup Dependencies
+        uses: ./.github/actions/setup-dependencies
         with:
-          go-version-file: "./${{matrix.service}}/go.mod"
-          cache-dependency-path: "./${{matrix.service}}/go.sum"
-      - name: Setup Node
-        if: ${{ startsWith(matrix.service, 'services/node') || startsWith(matrix.service, 'services/react') }}
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: "./${{matrix.service}}/package.json"
-          cache: "npm"
-          cache-dependency-path: "./${{matrix.service}}/package-lock.json"
-      - name: Install Poetry
-        if: ${{ startsWith(matrix.service, 'services/python') }}
-        uses: snok/install-poetry@v1
-      - name: Setup Python
-        if: ${{ startsWith(matrix.service, 'services/python') }}
-        uses: actions/setup-python@v6
-        with:
-          # python-version: "3.12.12"
-          python-version-file: ./${{ matrix.service }}/pyproject.toml
-          cache: poetry
-          cache-dependency-path: ./${{ matrix.service }}/poetry.lock
+          install_task: "true"
+          install_go: ${{ startsWith(matrix.service, 'services/go') }}
+          install_node: ${{ startsWith(matrix.service, 'services/node') || startsWith(matrix.service, 'services/react') }}
+          install_python: ${{ startsWith(matrix.service, 'services/python') }}
+          service_path: ${{ matrix.service }}
       - name: Install Dependency
-        working-directory: ${{matrix.service}}
+        working-directory: ${{ matrix.service }}
         run: |
           task install-ci
       - name: Run Test
-        working-directory: ${{matrix.service}}
+        working-directory: ${{ matrix.service }}
         run: |
           task test
