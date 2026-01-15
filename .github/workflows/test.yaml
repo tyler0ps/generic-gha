@@ -1,28 +1,82 @@
 name: Run Tests
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - services/**
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
-    branches:
-      - main
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      services: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v6
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            services/go/api-golang:
+              - 'services/go/api-golang/**'
+            services/node/api-node:
+              - 'services/node/api-node/**'
+            services/python/load-generator-python:
+              - 'services/python/load-generator-python/**'
+            services/react/client-react:
+              - 'services/react/client-react/**'
+            services/other/api-golang-migrator:
+              - 'services/other/api-golang-migrator/**'
+
   unit-test:
     runs-on: ubuntu-latest
+    needs: changes
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.changes.outputs.services) }}
     steps:
       - name: Install Task
         uses: go-task/setup-task@v1
       - name: Check out repository code
         uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - name: Setup Go
+        if: ${{ startsWith(matrix.service, 'services/go') }}
+        uses: actions/setup-go@v6
         with:
-          go-version-file: "./services/go/api-golang/go.mod"
-          cache-dependency-path: "./services/go/api-golang/go.sum"
+          go-version-file: "./${{matrix.service}}/go.mod"
+          cache-dependency-path: "./${{matrix.service}}/go.sum"
+      - name: Setup Node
+        if: ${{ startsWith(matrix.service, 'services/node') || startsWith(matrix.service, 'services/react') }}
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: "./${{matrix.service}}/package.json"
+          cache: "npm"
+          cache-dependency-path: "./${{matrix.service}}/package-lock.json"
+      - name: Install Poetry
+        if: ${{ startsWith(matrix.service, 'services/python') }}
+        uses: snok/install-poetry@v1
+      - name: Setup Python
+        if: ${{ startsWith(matrix.service, 'services/python') }}
+        uses: actions/setup-python@v6
+        with:
+          # python-version: "3.12.12"
+          python-version-file: ./${{ matrix.service }}/pyproject.toml
+          cache: poetry
+          cache-dependency-path: ./${{ matrix.service }}/poetry.lock
+      - name: Install Dependency
+        working-directory: ${{matrix.service}}
+        run: |
+          task install-ci
       - name: Run Test
-        working-directory: services/go/api-golang
+        working-directory: ${{matrix.service}}
         run: |
           task test

@@ -17,6 +17,11 @@ tasks:
     cmds:
       - go mod tidy
 
+  install-ci:
+    desc: install/download package dependencies
+    cmds:
+      - go mod download
+
   run:
     desc: "download dependencies"
     cmds:
