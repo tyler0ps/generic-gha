@@ -24,3 +24,13 @@ tasks:
         CONTAINER_ID=$(docker ps -q --filter "ancestor=postgres:16.3-alpine")
         docker cp ./migrations/000001_create_users_table.up.sql $CONTAINER_ID:/tmp/
         docker exec $CONTAINER_ID psql -U "postgres" -f /tmp/000001_create_users_table.up.sql
+
+  install-ci:
+    desc: install/download package dependencies
+    cmds:
+      - echo "NO-OP, nothing to install"
+
+  test:
+    desc: run tests
+    cmds:
+      - echo "NO-OP, no tests for this service yet"
