@@ -27,14 +27,13 @@ jobs:
           filters: |
             services/go/api-golang:
               - 'services/go/api-golang/**'
+              - 'services/other/api-golang-migrator/**'
             services/node/api-node:
               - 'services/node/api-node/**'
             services/python/load-generator-python:
               - 'services/python/load-generator-python/**'
             services/react/client-react:
               - 'services/react/client-react/**'
-            services/other/api-golang-migrator:
-              - 'services/other/api-golang-migrator/**'
 
   unit-test:
     runs-on: ubuntu-latest
