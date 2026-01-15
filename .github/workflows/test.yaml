@@ -21,7 +21,6 @@ jobs:
       services: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v6
-        if: ${{ github.event_name == 'workflow_dispatch' }}
       - uses: dorny/paths-filter@v3
         id: filter
         with:
