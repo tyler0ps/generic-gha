@@ -56,9 +56,9 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo 'services=["${{ github.event.inputs.service }}"]' >> $GITHUB_OUTPUT
             echo "environment=staging" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_type }}" = "tag"; then # for tag event, set services based on tag name
-            tag = "${{ github.ref_name }}" # services/go/api-golang@A.B.C
-            service = "${tag%%@*}" # services/go/api-golang
+          elif [ "${{ github.ref_type }}" = "tag" ]; then # for tag event, set services based on tag name
+            tag="${{ github.ref_name }}" # services/go/api-golang@A.B.C
+            service="${tag%%@*}" # services/go/api-golang
             echo "services=[\"$service\"]" >> $GITHUB_OUTPUT
             echo "environment=production" >> $GITHUB_OUTPUT
           else # for push to main branch, set services based on changed paths
