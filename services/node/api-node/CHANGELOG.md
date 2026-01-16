@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/sidpalas/capstone/compare/services/node/api-node@1.1.0...services/node/api-node@1.1.1) (2026-01-16)
+
+
+### Chores
+
+* trigger workflow action
+
 ## [1.1.0](https://github.com/sidpalas/capstone/compare/services/node/api-node@1.0.9...services/node/api-node@1.1.0) (2025-09-17)
 
 
