@@ -114,12 +114,12 @@ jobs:
           echo "Version: ${version}"
           echo "version=${version}" >> $GITHUB_OUTPUT
           echo "image_tag=${image_tag}" >> $GITHUB_OUTPUT
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: ${{ matrix.service }}
-      #     push: ${{ !env.ACT }}
-      #     tags: ${{ steps.image-tag.outputs.image_tag}}
-      #     platforms: linux/arm64 # linux/amd64,linux/arm64
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.service }}
+          push: ${{ !env.ACT }}
+          tags: ${{ steps.image-tag.outputs.image_tag}}
+          platforms: linux/arm64 # linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
