@@ -1,4 +1,4 @@
-name: Build and Push docker image
+name: Build & Push
 
 on:
   push:
@@ -42,6 +42,8 @@ jobs:
       environment: ${{ steps.set-outputs.outputs.environment }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Filter changed paths
         if: github.event_name != 'workflow_dispatch'
         uses: dorny/paths-filter@v3
