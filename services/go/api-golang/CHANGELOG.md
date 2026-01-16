@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/sidpalas/capstone/compare/services/go/api-golang@1.3.1...services/go/api-golang@1.3.2) (2026-01-16)
+
+
+### Chores
+
+* trigger workflow action
+
 ## [1.3.1](https://github.com/sidpalas/capstone/compare/services/go/api-golang@1.3.0...services/go/api-golang@1.3.1) (2025-09-17)
 
 
