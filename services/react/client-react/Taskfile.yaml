@@ -1,7 +1,7 @@
 version: "3"
 
 vars:
-  IMAGE_REPO: sidpalas/devops-directive-docker-course-client-react-nginx
+  IMAGE_REPO: tyler0ps/react-client
   IMAGE_TAG: foobarbaz
   SERVICE_RELEASE_TAG: services/react/client-react
 
@@ -16,6 +16,20 @@ tasks:
     cmds:
       - npm install
 
+  build-container-image:
+    desc: Build container image
+    cmds:
+      - docker build -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} .
+
+  build-container-image-multi-arch:
+    desc: Build multi-arch container image
+    cmds:
+      - |
+        docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
+        --push \
+        .
   install-ci:
     desc: install/download package dependencies
     cmds:
