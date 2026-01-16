@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/sidpalas/capstone/compare/services/python/load-generator-python@0.2.0...services/python/load-generator-python@0.2.1) (2026-01-16)
+
+
+### Chores
+
+* trigger workflow action
+
 ## [0.2.0](https://github.com/sidpalas/capstone/compare/services/python/load-generator-python@0.1.10...services/python/load-generator-python@0.2.0) (2025-09-17)
 
 
