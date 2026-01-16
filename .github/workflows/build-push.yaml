@@ -102,13 +102,13 @@ jobs:
         run: |
           if [ -n "$INPUT_VERSION" ] && [ "$INPUT_VERSION" != "" ]; then
             version=$INPUT_VERSION
-            image_tag=$(task utils:manual-version-tag -- $INPUT_VERSION)
+            image_tag=$(task utils:manual-version-tag -- "$INPUT_VERSION")
           elif [ "$ENVIRONMENT" = "production" ]; then
-            version=$(task utils:generate-version -- $SERVICE)
-            image_tag=$(task utils:generate-version-tag -- $SERVICE)
+            version=$(task utils:generate-version -- "$SERVICE")
+            image_tag=$(task utils:generate-version-tag -- "$SERVICE")
           else
-            version=$(task utils:generate-extended-version -- $SERVICE)
-            image_tag=$(task utils:generate-extended-version-tag -- $SERVICE)
+            version=$(task utils:generate-extended-version -- "$SERVICE")
+            image_tag=$(task utils:generate-extended-version-tag -- "$SERVICE")
           fi
           echo "Generated image tag: ${image_tag}"
           echo "Version: ${version}"
