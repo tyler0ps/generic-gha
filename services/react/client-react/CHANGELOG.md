@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/sidpalas/capstone/compare/services/react/client-react@1.1.0...services/react/client-react@1.1.1) (2026-01-16)
+
+
+### Chores
+
+* trigger workflow action
+
 ## [1.1.0](https://github.com/sidpalas/capstone/compare/services/react/client-react@1.0.10...services/react/client-react@1.1.0) (2025-09-17)
 
 
