@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/tyler0ps/generic-gha/compare/services/node/api-node@1.1.1...services/node/api-node@1.1.2) (2026-01-17)
+
+
+### Chores
+
+* **api-node:** update readme ([8fedd08](https://github.com/tyler0ps/generic-gha/commit/8fedd08f34493566eb461b2fe5275816e2a759e0))
+* **api-node:** update readme ([9bf9058](https://github.com/tyler0ps/generic-gha/commit/9bf9058e596f70b5023f5dcab5546e3b5c1d818a))
+
 ## [1.1.1](https://github.com/sidpalas/capstone/compare/services/node/api-node@1.1.0...services/node/api-node@1.1.1) (2026-01-16)
 
 
