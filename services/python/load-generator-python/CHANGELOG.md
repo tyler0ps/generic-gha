@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/tyler0ps/generic-gha/compare/services/python/load-generator-python@1.0.0...services/python/load-generator-python@1.1.0) (2026-01-17)
+
+
+### Features
+
+* **load-generator-python:** bump version ([2bdd38f](https://github.com/tyler0ps/generic-gha/commit/2bdd38f57d3e5787f2a9195cac114f3e8c7c14fd))
+
 ## [0.2.1](https://github.com/sidpalas/capstone/compare/services/python/load-generator-python@0.2.0...services/python/load-generator-python@0.2.1) (2026-01-16)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/tyler0ps/generic-gha/compare/services/other/api-golang-migrator@1.3.2...services/other/api-golang-migrator@1.3.3) (2026-01-17)
+
+
+### Chores
+
+* **services/other/api-golang-migrator:** Synchronize apis-and-db versions
+
 ## [1.3.2](https://github.com/sidpalas/capstone/compare/services/other/api-golang-migrator@1.3.1...services/other/api-golang-migrator@1.3.2) (2026-01-16)
 
 

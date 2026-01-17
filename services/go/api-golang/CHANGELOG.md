@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.3](https://github.com/tyler0ps/generic-gha/compare/services/go/api-golang@1.3.2...services/go/api-golang@1.3.3) (2026-01-17)
+
+
+### Chores
+
+* **api-golang:** remove unused files ([c690677](https://github.com/tyler0ps/generic-gha/commit/c690677f943a6a011bc5846268322daa29ca3a43))
+* **api-golang:** update readme ([a1c1b51](https://github.com/tyler0ps/generic-gha/commit/a1c1b51dc57e5d4ef984f866a0829c9793e9533c))
+* **api-golang:** update readme ([ca914da](https://github.com/tyler0ps/generic-gha/commit/ca914da97a6e2faef65102d5cf21679c429e03dd))
+
 ## [1.3.2](https://github.com/sidpalas/capstone/compare/services/go/api-golang@1.3.1...services/go/api-golang@1.3.2) (2026-01-16)
 
 
@@ -126,4 +135,3 @@
 * actually build container images ([#6](https://github.com/sidpalas/capstone/issues/6)) ([8114166](https://github.com/sidpalas/capstone/commit/81141669012054321ccd0b5a3db16024435a7e97))
 * add deploy workflow ([#7](https://github.com/sidpalas/capstone/issues/7)) ([d9ec8d8](https://github.com/sidpalas/capstone/commit/d9ec8d808cb8a664e4f96bf053f594cbff51231a))
 * dd test and build workflows ([#1](https://github.com/sidpalas/capstone/issues/1)) ([39e077a](https://github.com/sidpalas/capstone/commit/39e077aa58b0818070453d0efe89f551bb143a67))
-
