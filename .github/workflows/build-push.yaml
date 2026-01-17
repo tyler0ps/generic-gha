@@ -123,3 +123,12 @@ jobs:
           platforms: linux/arm64 # linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Trigger Deploy
+        if: ${{ !env.ACT }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run update-gitops-manifests.yaml \
+            -f service=${{ matrix.service }} \
+            -f version=${{ steps.image-tag.outputs.version }} \
+            -f environment=${{ needs.changes.outputs.environment }}
