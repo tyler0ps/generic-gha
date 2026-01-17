@@ -36,8 +36,8 @@ jobs:
     # environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v6
-        # with:
-        #   ref: main
+        with:
+          ref: main
       - uses: ./.github/actions/setup-dependencies
         with:
           install_task: true
@@ -53,10 +53,10 @@ jobs:
             ENVIRONMENT=${{ inputs.environment }}
       - run: |
           git --no-pager diff
-      # - name: Commit & push (via Task)
-      #   if: ${{ !env.ACT }}
-      #   working-directory: ${{ inputs.service }}
-      #   run: |
-      #     task utils:git:commit-push \
-      #       COMMIT_MSG="${{ steps.generate-commit-message.outputs.commit_message }}" \
-      #       BRANCH=main
+      - name: Commit & push (via Task)
+        if: ${{ !env.ACT }}
+        working-directory: ${{ inputs.service }}
+        run: |
+          task utils:git:commit-push \
+            COMMIT_MSG="${{ steps.generate-commit-message.outputs.commit_message }}" \
+            BRANCH=main
