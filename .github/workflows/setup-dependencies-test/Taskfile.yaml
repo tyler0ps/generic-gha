@@ -1,0 +1,72 @@
+version: "3"
+
+# Prerequisites:
+# - act must be installed (https://github.com/nektos/act)
+# - Docker must be running
+#
+# Usage:
+#   task run-all           # Run all tests
+#   task run-task-only     # Test Task installation only
+#   task run-go            # Test Go setup
+#   task run-node          # Test Node setup
+#   task run-python        # Test Python setup
+
+tasks:
+  run-all:
+    desc: "Run all setup-dependencies tests"
+    dir: "../../.."
+    cmds:
+      - |
+        act workflow_dispatch \
+          --container-architecture linux/arm64 \
+          --eventpath .github/workflows/setup-dependencies-test/event.json \
+          --workflows .github/workflows/setup-dependencies-test/setup-dependencies-test.yaml \
+          --cache-server-path ~/.cache/act
+
+  run-task-only:
+    desc: "Test Task installation only"
+    dir: "../../.."
+    cmds:
+      - |
+        act workflow_dispatch \
+          --container-architecture linux/arm64 \
+          --eventpath .github/workflows/setup-dependencies-test/event.json \
+          --workflows .github/workflows/setup-dependencies-test/setup-dependencies-test.yaml \
+          --job test-task-only \
+          --cache-server-path ~/.cache/act
+
+  run-go:
+    desc: "Test Go setup with Task"
+    dir: "../../.."
+    cmds:
+      - |
+        act workflow_dispatch \
+          --container-architecture linux/arm64 \
+          --eventpath .github/workflows/setup-dependencies-test/event.json \
+          --workflows .github/workflows/setup-dependencies-test/setup-dependencies-test.yaml \
+          --job test-go-setup \
+          --cache-server-path ~/.cache/act
+
+  run-node:
+    desc: "Test Node setup with Task"
+    dir: "../../.."
+    cmds:
+      - |
+        act workflow_dispatch \
+          --container-architecture linux/arm64 \
+          --eventpath .github/workflows/setup-dependencies-test/event.json \
+          --workflows .github/workflows/setup-dependencies-test/setup-dependencies-test.yaml \
+          --job test-node-setup \
+          --cache-server-path ~/.cache/act
+
+  run-python:
+    desc: "Test Python setup with Task"
+    dir: "../../.."
+    cmds:
+      - |
+        act workflow_dispatch \
+          --container-architecture linux/arm64 \
+          --eventpath .github/workflows/setup-dependencies-test/event.json \
+          --workflows .github/workflows/setup-dependencies-test/setup-dependencies-test.yaml \
+          --job test-python-setup \
+          --cache-server-path ~/.cache/act

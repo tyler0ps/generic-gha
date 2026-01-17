@@ -1,0 +1,5 @@
+{
+  "inputs": {
+    "service": "services/other/api-golang-migrator"
+  }
+}

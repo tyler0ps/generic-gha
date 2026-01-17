@@ -1,0 +1,98 @@
+name: Test setup-dependencies Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-task-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Test setup-dependencies (Task only)
+        uses: ./.github/actions/setup-dependencies
+        with:
+          install_task: "true"
+          install_go: "false"
+          install_node: "false"
+          install_python: "false"
+
+      - name: Verify Task installation
+        run: |
+          echo "Verifying Task installation..."
+          task --version
+          echo "Task installation verified successfully!"
+
+  test-go-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Test setup-dependencies (Task + Go)
+        uses: ./.github/actions/setup-dependencies
+        with:
+          install_task: "true"
+          install_go: "true"
+          install_node: "false"
+          install_python: "false"
+          service_path: "services/go/api-golang"
+
+      - name: Verify installations
+        run: |
+          echo "Verifying Task installation..."
+          task --version
+          echo "Verifying Go installation..."
+          go version
+          echo "All installations verified successfully!"
+
+  test-node-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Test setup-dependencies (Task + Node)
+        uses: ./.github/actions/setup-dependencies
+        with:
+          install_task: "true"
+          install_go: "false"
+          install_node: "true"
+          install_python: "false"
+          service_path: "services/node/api-node"
+
+      - name: Verify installations
+        run: |
+          echo "Verifying Task installation..."
+          task --version
+          echo "Verifying Node installation..."
+          node --version
+          echo "Verifying npm installation..."
+          npm --version
+          echo "All installations verified successfully!"
+
+  test-python-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Test setup-dependencies (Task + Python)
+        uses: ./.github/actions/setup-dependencies
+        with:
+          install_task: "true"
+          install_go: "false"
+          install_node: "false"
+          install_python: "true"
+          service_path: "services/python/load-generator-python"
+
+      - name: Verify installations
+        run: |
+          echo "Verifying Task installation..."
+          task --version
+          echo "Verifying Python installation..."
+          python --version
+          echo "Verifying Poetry installation..."
+          poetry --version
+          echo "All installations verified successfully!"
