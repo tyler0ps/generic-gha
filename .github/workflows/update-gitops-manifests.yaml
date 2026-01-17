@@ -33,7 +33,9 @@ concurrency:
 jobs:
   update-manifest:
     runs-on: ubuntu-latest
-    # environment: ${{ inputs.environment }}
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
         with:
