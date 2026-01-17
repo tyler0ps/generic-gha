@@ -63,3 +63,37 @@ tasks:
     cmds:
       - |
         echo "{{.IMAGE_REPO}}:{{.VERSION}}"
+
+  update-image-tags:
+    desc: "Recursively update image tags in files with the specified comment"
+    vars:
+      EXCLUDED_FILES: |
+        {{.TASKFILE_DIR}}/Taskfile.yaml
+        MORE_FILES_CAN_GO_HERE
+    cmds:
+      - cmd: |
+          if [ -z "{{.NEW_TAG}}" ] || [ -z "{{.IDENTIFIER_COMMENT}}" ] || [ -z "{{.STARTING_PATH}}" ]; then
+            echo "Usage: task update-image-tags NEW_TAG=new-tag IDENTIFIER_COMMENT='# THIS_IS_MY_IMAGE_TAG' STARTING_PATH=/path/to/start" && exit 1;
+          fi
+      - cmd: |
+          echo "STARTING_PATH: {{ .STARTING_PATH }}"
+          echo "IDENTIFIER_COMMENT: {{ .IDENTIFIER_COMMENT }}"
+          echo "NEW_TAG: {{ .NEW_TAG }}"
+        silent: true
+      - cmd: |
+          find "{{.STARTING_PATH}}" -type f \( -name "*.yaml" -o -name "*.yml" \) -exec grep -l "{{.IDENTIFIER_COMMENT}}" {} \; | while read -r file; do
+            if ! echo "{{ .EXCLUDED_FILES }}" | grep -q "$file"; then
+              echo "Updating: $file"
+              # NOTE: macos and GNU sed behave differently here... GNU sed is available in the devbox environment
+              sed -i "s|\(\s*.*:\s*\).* \({{ .IDENTIFIER_COMMENT }}\)|\1{{ .NEW_TAG }} \2|" "$file";
+            fi
+          done
+
+  update-image-tags-service:
+    desc: "Update image tags for gitops config"
+    cmds:
+      - task: update-image-tags
+        vars:
+          IDENTIFIER_COMMENT: "# {{.ENVIRONMENT}}_{{.SERVICE_RELEASE_TAG}}"
+          STARTING_PATH:
+            sh: git rev-parse --show-toplevel

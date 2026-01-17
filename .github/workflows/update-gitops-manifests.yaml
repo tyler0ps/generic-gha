@@ -1,0 +1,62 @@
+name: Update GitOps Manifests
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service to deploy (e.g., services/go/api-golang)"
+        required: true
+        type: choice
+        options:
+          - services/go/api-golang
+          - services/node/api-node
+          - services/python/load-generator-python
+          - services/react/client-react
+          - services/other/api-golang-migrator
+      version:
+        description: "Version to deploy (e.g., 1.0.0)"
+        required: true
+        type: string
+      environment:
+        description: "Deployment environment (staging or production)"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
+
+concurrency:
+  group: ${{ github.workflow }}-gitops-${{ inputs.environment }}-${{ inputs.service }}
+  cancel-in-progress: false
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    # environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v6
+        # with:
+        #   ref: main
+      - uses: ./.github/actions/setup-dependencies
+        with:
+          install_task: true
+      - name: Generate Commit Message
+        id: generate-commit-message
+        run: |
+          commit_message="chore: update ${{ inputs.environment }}, ${{ inputs.service }}, ${{ inputs.version }} [skip ci]"
+          echo "commit_message=${commit_message}" >> "$GITHUB_OUTPUT"
+      - working-directory: ${{ inputs.service}}
+        run: |
+          task utils:update-image-tags-service \
+            NEW_TAG=${{ inputs.version }} \
+            ENVIRONMENT=${{ inputs.environment }}
+      - run: |
+          git --no-pager diff
+      # - name: Commit & push (via Task)
+      #   if: ${{ !env.ACT }}
+      #   working-directory: ${{ inputs.service }}
+      #   run: |
+      #     task utils:git:commit-push \
+      #       COMMIT_MSG="${{ steps.generate-commit-message.outputs.commit_message }}" \
+      #       BRANCH=main
