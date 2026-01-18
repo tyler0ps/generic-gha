@@ -20,10 +20,8 @@ on:
     paths:
       - services/**
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+    paths:
+      - services/**
 
 jobs:
   changes:
