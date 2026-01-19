@@ -17,6 +17,11 @@ on:
         options:
           - 1-infrastructure
           - 2-compute
+      destroy:
+        description: "Confirm destruction of infrastructure"
+        required: true
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-gitops-${{ inputs.environment }}-${{ inputs.stack }}
@@ -33,4 +38,10 @@ jobs:
         run: |
           cd terraform/environments/${{ inputs.environment }}/${{ inputs.stack }}
           terraform init
-          terraform destroy -auto-approve
+          terraform plan -destroy
+          if [ "${{ inputs.destroy }}" = "true" ]; then
+          echo "Destruction confirmed. Proceeding with terraform destroy..."
+          # terraform destroy -auto-approve
+          else
+            echo "Destruction not confirmed. Set 'destroy' input to true to proceed."
+          fi
