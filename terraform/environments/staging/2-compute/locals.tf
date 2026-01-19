@@ -2,7 +2,6 @@ locals {
   environment = "staging"
   project     = "generic-gha"
   region      = "ap-southeast-1"
-  azs         = ["ap-southeast-1a", "ap-southeast-1b"]
 
   # Service definitions
   services = {
@@ -11,7 +10,7 @@ locals {
       cpu               = 256
       memory            = 512
       desired_count     = 1
-      health_check_path = "/ping"
+      health_check_path = "/api/golang/ping"
       path_pattern      = ["/api/golang/*"]
       priority          = 100
       needs_database    = true
@@ -21,7 +20,7 @@ locals {
       cpu               = 256
       memory            = 512
       desired_count     = 1
-      health_check_path = "/health"
+      health_check_path = "/api/node/health"
       path_pattern      = ["/api/node/*"]
       priority          = 200
       needs_database    = true
