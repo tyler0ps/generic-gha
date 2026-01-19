@@ -1,0 +1,78 @@
+version: "3"
+
+vars:
+  RED: '\033[0;31m'
+  GREEN: '\033[0;32m'
+  YELLOW: '\033[1;33m'
+  BLUE: '\033[0;34m'
+  NC: '\033[0m'
+
+tasks:
+  default:
+    desc: Show available RDS management commands
+    silent: true
+    cmds:
+      - |
+        echo "RDS Control Tasks"
+        echo ""
+        echo "Available tasks:"
+        echo "  task status  - Check current RDS status"
+        echo "  task stop    - Stop RDS (saves ~\$13/month)"
+        echo "  task start   - Start RDS"
+        echo "  task info    - Show cost and management information"
+        echo ""
+        echo "Examples:"
+        echo "  task status"
+        echo "  task stop"
+        echo "  task start"
+
+  check-terraform:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: command -v terraform
+        msg: "Error: terraform command not found"
+
+  status:
+    desc: Check current RDS status
+    deps: [check-terraform]
+    cmds:
+      - echo -e "{{.BLUE}}Checking RDS status...{{.NC}}"
+      - terraform output -raw rds_status_command | bash
+
+  stop:
+    desc: Stop RDS instance (saves ~$13/month)
+    deps: [check-terraform]
+    prompt: |
+      Stopping RDS instance...
+      This will save ~$13/month while stopped (storage cost: $3/month)
+
+      ⚠️  AWS will automatically restart RDS after 7 days
+
+      Continue?
+    cmds:
+      - echo -e "{{.YELLOW}}Stopping RDS instance...{{.NC}}"
+      - terraform output -raw rds_stop_command | bash
+      - echo ""
+      - echo -e "{{.GREEN}}✓ RDS stop command sent{{.NC}}"
+      - echo "Note~ It may take a few minutes to fully stop."
+      - echo "Run 'task status' to check progress."
+      - echo ""
+      - echo -e "{{.YELLOW}}⚠️  AWS will automatically restart RDS after 7 days{{.NC}}"
+
+  start:
+    desc: Start RDS instance
+    deps: [check-terraform]
+    cmds:
+      - echo -e "{{.BLUE}}Starting RDS instance...{{.NC}}"
+      - terraform output -raw rds_start_command | bash
+      - echo ""
+      - echo -e "{{.GREEN}}✓ RDS start command sent{{.NC}}"
+      - echo "Note~ It may take a few minutes to become available."
+      - echo "Run 'task status' to check progress."
+
+  info:
+    desc: Show cost and management information
+    deps: [check-terraform]
+    cmds:
+      - terraform output rds_management_info

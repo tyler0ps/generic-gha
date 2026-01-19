@@ -1,0 +1,36 @@
+name: Deploy Cloud Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the environment to update"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      stack:
+        description: "Select the stack to destroy"
+        required: true
+        type: choice
+        options:
+          - 1-infrastructure
+          - 2-compute
+
+concurrency:
+  group: ${{ github.workflow }}-gitops-${{ inputs.environment }}-${{ inputs.stack }}
+  cancel-in-progress: false
+
+jobs:
+  terraform-destroy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+      - name: Terraform Destroy
+        run: |
+          cd terraform/environments/${{ inputs.environment }}/${{ inputs.stack }}
+          terraform init
+          terraform destroy -auto-approve

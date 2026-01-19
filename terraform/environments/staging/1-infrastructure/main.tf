@@ -1,8 +1,17 @@
+# ============================================================
+# INFRASTRUCTURE LAYER
+# ============================================================
+# Long-lived resources: VPC, RDS, Security Groups
+# Apply once and keep running
+
 data "aws_caller_identity" "current" {}
 
+# ============================================================
 # VPC
+# ============================================================
+
 module "vpc" {
-  source = "../../modules/vpc"
+  source = "../../../modules/vpc"
 
   name               = "${local.project}-${local.environment}"
   environment        = local.environment
@@ -10,8 +19,11 @@ module "vpc" {
   azs                = local.azs
   single_nat_gateway = true # Cost saving for staging
   enable_nat_gateway = true # Required for ECS to pull images
-
 }
+
+# ============================================================
+# SECURITY GROUPS
+# ============================================================
 
 # Shared security group for services that need database access
 # This breaks the cycle between services and RDS
@@ -33,30 +45,12 @@ resource "aws_security_group" "db_access" {
   }
 }
 
-# ECS Cluster
-module "ecs_cluster" {
-  source = "../../modules/ecs-cluster"
+# ============================================================
+# RDS POSTGRESQL
+# ============================================================
 
-  name                      = "${local.project}-${local.environment}"
-  environment               = local.environment
-  enable_container_insights = false # Cost saving
-  use_spot                  = true  # Cost saving
-}
-
-# ALB
-module "alb" {
-  source = "../../modules/alb"
-
-  name                       = "${local.project}-${local.environment}"
-  environment                = local.environment
-  vpc_id                     = module.vpc.vpc_id
-  public_subnets             = module.vpc.public_subnets
-  enable_deletion_protection = false # Easy destruction
-}
-
-# RDS PostgreSQL
 module "rds" {
-  source = "../../modules/rds"
+  source = "../../../modules/rds"
 
   name            = "postgres"
   environment     = local.environment
