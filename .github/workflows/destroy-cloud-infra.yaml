@@ -1,4 +1,5 @@
-name: Deploy Cloud Infrastructure
+name: Destroy Infrastructure
+run-name: Destroy Infrastructure in ${{ inputs.environment }} - ${{ inputs.stack }}
 
 on:
   workflow_dispatch:
@@ -43,7 +44,6 @@ jobs:
       - name: Terraform Destroy Plan
         working-directory: terraform/environments/${{ inputs.environment }}/${{ inputs.stack }}
         run: |
-          cd terraform/environments/${{ inputs.environment }}/${{ inputs.stack }}
           terraform init
           terraform plan -destroy
       - name: Terraform Destroy Apply
