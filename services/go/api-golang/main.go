@@ -36,20 +36,24 @@ func main() {
 	var tm time.Time
 	var reqCount int
 
-	r.GET("/", func(c *gin.Context) {
-		database.InsertView(c)
-		tm, reqCount = database.GetTimeAndRequestCount(c)
-		c.JSON(200, gin.H{
-			"api":          "go",
-			"currentTime":  tm,
-			"requestCount": reqCount,
+	// Create a route group with /api/golang prefix
+	api := r.Group("/api/golang")
+	{
+		api.GET("/", func(c *gin.Context) {
+			database.InsertView(c)
+			tm, reqCount = database.GetTimeAndRequestCount(c)
+			c.JSON(200, gin.H{
+				"api":          "go",
+				"currentTime":  tm,
+				"requestCount": reqCount,
+			})
 		})
-	})
 
-	r.GET("/ping", func(c *gin.Context) {
-		_, _ = database.GetTimeAndRequestCount(c)
-		c.JSON(200, "pong")
-	})
+		api.GET("/ping", func(c *gin.Context) {
+			_, _ = database.GetTimeAndRequestCount(c)
+			c.JSON(200, "pong")
+		})
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
