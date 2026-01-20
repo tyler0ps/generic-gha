@@ -128,3 +128,19 @@ variable "additional_security_groups" {
   type        = list(string)
   default     = []
 }
+
+# ============================================================
+# SERVICE DISCOVERY
+# ============================================================
+
+variable "enable_service_discovery" {
+  description = "Enable AWS Cloud Map service discovery"
+  type        = bool
+  default     = false
+}
+
+variable "service_discovery_namespace_id" {
+  description = "ID of the service discovery namespace"
+  type        = string
+  default     = null
+}

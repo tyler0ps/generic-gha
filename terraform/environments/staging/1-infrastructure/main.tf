@@ -45,6 +45,35 @@ resource "aws_security_group" "db_access" {
   }
 }
 
+# Shared security group for inter-service communication
+# All ECS services will be added to this group to enable service-to-service calls
+resource "aws_security_group" "ecs_services" {
+  name        = "${local.project}-${local.environment}-ecs-services"
+  description = "Shared security group for ECS inter-service communication"
+  vpc_id      = module.vpc.vpc_id
+
+  # Allow inbound traffic from any service in this security group
+  ingress {
+    description = "Allow inter-service communication"
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "tcp"
+    self        = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${local.project}-${local.environment}-ecs-services"
+    Environment = local.environment
+  }
+}
+
 # ============================================================
 # RDS POSTGRESQL
 # ============================================================
@@ -64,4 +93,21 @@ module "rds" {
   deletion_protection     = false         # Easy destruction
   skip_final_snapshot     = true          # Easy destruction
   backup_retention_period = 0             # No backups for testing
+}
+
+# ============================================================
+# SERVICE DISCOVERY NAMESPACE
+# ============================================================
+# Private DNS namespace for inter-service communication
+# Services will be accessible at: <service-name>.staging.generic-gha.local
+
+resource "aws_service_discovery_private_dns_namespace" "main" {
+  name        = "${local.environment}.${local.project}.local"
+  description = "Service discovery namespace for ${local.project} ${local.environment}"
+  vpc         = module.vpc.vpc_id
+
+  tags = {
+    Name        = "${local.project}-${local.environment}-service-discovery"
+    Environment = local.environment
+  }
 }
