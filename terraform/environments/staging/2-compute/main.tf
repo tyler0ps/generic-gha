@@ -140,6 +140,53 @@ module "api_node" {
 }
 
 # ============================================================
+# REACT CLIENT SERVICE
+# ============================================================
+
+module "client_react" {
+  source = "../../../modules/ecs-service-v2"
+
+  name        = "client-react"
+  environment = local.environment
+  region      = local.region
+
+  # Container configuration
+  # container_image = "${data.aws_ecr_repository.client_react.repository_url}:${local.environment}"
+  container_image = "${data.aws_ecr_repository.client_react.repository_url}:1.1.1-0053-g1afe59c"
+  container_port  = local.services["client-react"].port
+  cpu             = local.services["client-react"].cpu
+  memory          = local.services["client-react"].memory
+  desired_count   = local.services["client-react"].desired_count
+
+  # Networking
+  vpc_id                = local.vpc_id
+  private_subnets       = local.private_subnets
+  alb_security_group_id = module.alb.security_group_id
+
+  # No database or inter-service communication needed for React app
+  additional_security_groups = []
+
+  # Load balancer - catch-all route (lowest priority)
+  listener_arn      = module.alb.http_listener_arn
+  health_check_path = local.services["client-react"].health_check_path
+  path_pattern      = local.services["client-react"].path_pattern
+  priority          = local.services["client-react"].priority
+
+  # ECS cluster
+  cluster_id = module.ecs_cluster.cluster_id
+
+  # No secrets needed for React app
+  secrets = {}
+
+  # Service Discovery not needed (React app is accessed via ALB only)
+  enable_service_discovery       = false
+  service_discovery_namespace_id = ""
+
+  # No environment variables needed
+  environment_variables = {}
+}
+
+# ============================================================
 # DATABASE MIGRATOR TASK
 # ============================================================
 

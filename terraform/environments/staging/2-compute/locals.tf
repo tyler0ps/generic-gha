@@ -40,7 +40,7 @@ locals {
       cpu               = 256
       memory            = 512
       desired_count     = 1
-      health_check_path = "/"
+      health_check_path = "/ping"
       path_pattern      = ["/*"]
       priority          = 999 # Catch-all, lowest priority
       needs_database    = false

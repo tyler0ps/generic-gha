@@ -28,6 +28,10 @@ data "aws_ecr_repository" "api_golang_migrator" {
   name = "${local.project}/api-golang-migrator"
 }
 
+data "aws_ecr_repository" "client_react" {
+  name = "${local.project}/client-react"
+}
+
 # Convenience locals for cleaner code
 locals {
   # Infrastructure outputs
