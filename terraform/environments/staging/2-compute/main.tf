@@ -55,8 +55,11 @@ module "api_golang" {
   private_subnets       = local.private_subnets
   alb_security_group_id = module.alb.security_group_id
 
-  # Database access - add db_access security group
-  additional_security_groups = [local.db_access_security_group_id]
+  # Database access and inter-service communication
+  additional_security_groups = [
+    local.db_access_security_group_id,
+    local.ecs_services_security_group_id
+  ]
 
   # Load balancer
   listener_arn      = module.alb.http_listener_arn
@@ -72,6 +75,10 @@ module "api_golang" {
     DATABASE_URL = local.rds_connection_string_ssm_arn
   }
 
+  # Service Discovery
+  enable_service_discovery       = true
+  service_discovery_namespace_id = local.service_discovery_namespace_id
+
   # Port configuration
   environment_variables = {
     PORT = tostring(local.services["api-golang"].port)
@@ -79,7 +86,7 @@ module "api_golang" {
 }
 
 # ============================================================
-# GO API SERVICE
+# NODE API SERVICE
 # ============================================================
 
 module "api_node" {
@@ -90,7 +97,7 @@ module "api_node" {
   region      = local.region
 
   # Container configuration
-  container_image = "${data.aws_ecr_repository.api_node.repository_url}:1.1.2-0016-gf1a3460"
+  container_image = "${data.aws_ecr_repository.api_node.repository_url}:1.1.2-0023-g3289b6a"
   container_port  = local.services["api-node"].port
   cpu             = local.services["api-node"].cpu
   memory          = local.services["api-node"].memory
@@ -101,8 +108,11 @@ module "api_node" {
   private_subnets       = local.private_subnets
   alb_security_group_id = module.alb.security_group_id
 
-  # Database access - add db_access security group
-  additional_security_groups = [local.db_access_security_group_id]
+  # Database access and inter-service communication
+  additional_security_groups = [
+    local.db_access_security_group_id,
+    local.ecs_services_security_group_id
+  ]
 
   # Load balancer
   listener_arn      = module.alb.http_listener_arn
@@ -118,9 +128,14 @@ module "api_node" {
     DATABASE_URL = local.rds_connection_string_ssm_arn
   }
 
-  # Port configuration
+  # Service Discovery
+  enable_service_discovery       = true
+  service_discovery_namespace_id = local.service_discovery_namespace_id
+
+  # Environment variables
   environment_variables = {
-    PORT = tostring(local.services["api-node"].port)
+    PORT               = tostring(local.services["api-node"].port)
+    GOLANG_SERVICE_URL = "http://api-golang.${local.service_discovery_namespace_name}:8080"
   }
 }
 

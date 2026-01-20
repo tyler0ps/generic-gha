@@ -25,6 +25,11 @@ output "db_access_security_group_id" {
   value       = aws_security_group.db_access.id
 }
 
+output "ecs_services_security_group_id" {
+  description = "Shared security group ID for inter-service communication"
+  value       = aws_security_group.ecs_services.id
+}
+
 # RDS Outputs
 output "rds_endpoint" {
   description = "RDS endpoint"
@@ -54,6 +59,17 @@ output "rds_connection_string_ssm_arn" {
 output "rds_security_group_id" {
   description = "RDS security group ID"
   value       = module.rds.security_group_id
+}
+
+# Service Discovery Outputs
+output "service_discovery_namespace_id" {
+  description = "ID of the service discovery namespace"
+  value       = aws_service_discovery_private_dns_namespace.main.id
+}
+
+output "service_discovery_namespace_name" {
+  description = "Name of the service discovery namespace"
+  value       = aws_service_discovery_private_dns_namespace.main.name
 }
 
 # Common Values

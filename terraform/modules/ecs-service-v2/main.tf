@@ -181,7 +181,9 @@ resource "aws_lb_target_group" "service" {
   port        = var.container_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip" # Required for Fargate
+  target_type = "ip"
+
+  deregistration_delay = 30 # Reduce from 300s default to 30s
 
   health_check {
     path                = var.health_check_path
@@ -248,6 +250,45 @@ resource "aws_ecs_service" "service" {
     container_port   = var.container_port
   }
 
+  # Service Discovery registration
+  dynamic "service_registries" {
+    for_each = var.enable_service_discovery ? [1] : []
+    content {
+      registry_arn = aws_service_discovery_service.service[0].arn
+    }
+  }
+
   # Wait for listener rule to be created
   depends_on = [aws_lb_listener_rule.service]
+}
+
+# ============================================================
+# 9. SERVICE DISCOVERY (Optional)
+# ============================================================
+# Registers service with AWS Cloud Map for DNS-based discovery
+
+resource "aws_service_discovery_service" "service" {
+  count = var.enable_service_discovery ? 1 : 0
+
+  name = var.name
+
+  dns_config {
+    namespace_id = var.service_discovery_namespace_id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
+
+  tags = {
+    Name        = "${var.environment}-${var.name}-discovery"
+    Environment = var.environment
+  }
 }
