@@ -65,17 +65,25 @@ variable "private_subnets" {
 }
 
 variable "alb_security_group_id" {
-  description = "Security group ID of the ALB"
+  description = "Security group ID of the ALB (optional, set to empty string if no ALB)"
   type        = string
+  default     = ""
 }
 
 # ============================================================
 # LOAD BALANCER CONFIGURATION
 # ============================================================
 
+variable "enable_load_balancer" {
+  description = "Enable ALB integration (set to false for background services)"
+  type        = bool
+  default     = true
+}
+
 variable "listener_arn" {
   description = "ARN of the ALB listener"
   type        = string
+  default     = ""
 }
 
 variable "health_check_path" {
@@ -87,11 +95,13 @@ variable "health_check_path" {
 variable "path_pattern" {
   description = "URL path patterns to route to this service (e.g., ['/*'])"
   type        = list(string)
+  default     = []
 }
 
 variable "priority" {
   description = "Listener rule priority (lower = higher priority, use 999 for catch-all)"
   type        = number
+  default     = 0
 }
 
 # ============================================================

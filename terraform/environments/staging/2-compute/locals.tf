@@ -26,14 +26,10 @@ locals {
       needs_database    = true
     }
     load-generator-python = {
-      port              = 8000
-      cpu               = 256
-      memory            = 512
-      desired_count     = 0 # Scale up when needed
-      health_check_path = "/health"
-      path_pattern      = ["/load/*"]
-      priority          = 300
-      needs_database    = false
+      cpu            = 256
+      memory         = 512
+      desired_count  = 1 # Enable to generate load
+      needs_database = false
     }
     client-react = {
       port              = 8080

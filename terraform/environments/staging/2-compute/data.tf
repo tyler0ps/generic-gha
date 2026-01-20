@@ -32,6 +32,10 @@ data "aws_ecr_repository" "client_react" {
   name = "${local.project}/client-react"
 }
 
+data "aws_ecr_repository" "load_generator_python" {
+  name = "${local.project}/load-generator-python"
+}
+
 # Convenience locals for cleaner code
 locals {
   # Infrastructure outputs

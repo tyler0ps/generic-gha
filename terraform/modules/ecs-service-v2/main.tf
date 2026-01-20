@@ -91,12 +91,15 @@ resource "aws_security_group" "service" {
   description = "Security group for ${var.name}"
   vpc_id      = var.vpc_id
 
-  # Allow inbound traffic from ALB only
-  ingress {
-    from_port       = var.container_port
-    to_port         = var.container_port
-    protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+  # Allow inbound traffic from ALB only (if ALB is enabled)
+  dynamic "ingress" {
+    for_each = var.enable_load_balancer ? [1] : []
+    content {
+      from_port       = var.container_port
+      to_port         = var.container_port
+      protocol        = "tcp"
+      security_groups = [var.alb_security_group_id]
+    }
   }
 
   # Allow all outbound traffic (for pulling images, database access, etc)
@@ -177,6 +180,8 @@ resource "aws_ecs_task_definition" "service" {
 # ALB uses this to route traffic to container instances
 
 resource "aws_lb_target_group" "service" {
+  count = var.enable_load_balancer ? 1 : 0
+
   name        = "${var.environment}-${var.name}"
   port        = var.container_port
   protocol    = "HTTP"
@@ -201,12 +206,14 @@ resource "aws_lb_target_group" "service" {
 # Routes requests matching path_pattern to this service
 
 resource "aws_lb_listener_rule" "service" {
+  count = var.enable_load_balancer ? 1 : 0
+
   listener_arn = var.listener_arn
   priority     = var.priority
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.service.arn
+    target_group_arn = aws_lb_target_group.service[0].arn
   }
 
   condition {
@@ -243,11 +250,14 @@ resource "aws_ecs_service" "service" {
     assign_public_ip = false
   }
 
-  # Connect to load balancer
-  load_balancer {
-    target_group_arn = aws_lb_target_group.service.arn
-    container_name   = var.name
-    container_port   = var.container_port
+  # Connect to load balancer (only if enabled)
+  dynamic "load_balancer" {
+    for_each = var.enable_load_balancer ? [1] : []
+    content {
+      target_group_arn = aws_lb_target_group.service[0].arn
+      container_name   = var.name
+      container_port   = var.container_port
+    }
   }
 
   # Service Discovery registration

@@ -152,7 +152,7 @@ module "client_react" {
 
   # Container configuration
   # container_image = "${data.aws_ecr_repository.client_react.repository_url}:${local.environment}"
-  container_image = "${data.aws_ecr_repository.client_react.repository_url}:1.1.1-0053-g1afe59c"
+  container_image = "${data.aws_ecr_repository.client_react.repository_url}:1.1.1-0056-ge47aa3e"
   container_port  = local.services["client-react"].port
   cpu             = local.services["client-react"].cpu
   memory          = local.services["client-react"].memory
@@ -184,6 +184,54 @@ module "client_react" {
 
   # No environment variables needed
   environment_variables = {}
+}
+
+# ============================================================
+# LOAD GENERATOR SERVICE
+# ============================================================
+
+module "load_generator_python" {
+  source = "../../../modules/ecs-service-v2"
+
+  name        = "load-generator-python"
+  environment = local.environment
+  region      = local.region
+
+  # Container configuration
+  # container_image = "${data.aws_ecr_repository.load_generator_python.repository_url}:${local.e/nvironment}"
+  container_image = "${data.aws_ecr_repository.load_generator_python.repository_url}:1.1.0-0038-g851e966"
+  container_port  = 8000 # Not used for incoming traffic, but required by module
+  cpu             = local.services["load-generator-python"].cpu
+  memory          = local.services["load-generator-python"].memory
+  desired_count   = local.services["load-generator-python"].desired_count
+
+  # Networking
+  vpc_id          = local.vpc_id
+  private_subnets = local.private_subnets
+
+  # Inter-service communication
+  additional_security_groups = [
+    local.ecs_services_security_group_id
+  ]
+
+  # ECS cluster
+  cluster_id = module.ecs_cluster.cluster_id
+
+  # No secrets needed for load generator
+  secrets = {}
+
+  # Disable ALB integration (background service)
+  enable_load_balancer = false
+
+  # Service Discovery not needed (only makes outbound requests)
+  enable_service_discovery       = false
+  service_discovery_namespace_id = ""
+
+  # Environment variables - target the Node API via service discovery
+  environment_variables = {
+    API_URL  = "http://api-node.${local.service_discovery_namespace_name}:3000/api/node/"
+    DELAY_MS = "5000" # 5 seconds between requests
+  }
 }
 
 # ============================================================

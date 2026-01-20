@@ -23,8 +23,8 @@ output "security_group_id" {
 }
 
 output "target_group_arn" {
-  description = "ARN of the target group"
-  value       = aws_lb_target_group.service.arn
+  description = "ARN of the target group (empty if load balancer is disabled)"
+  value       = length(aws_lb_target_group.service) > 0 ? aws_lb_target_group.service[0].arn : ""
 }
 
 output "log_group_name" {
