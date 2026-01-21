@@ -246,6 +246,73 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "cloudwatch:*"
         ]
         Resource = "*"
+      },
+      {
+        # EKS operations
+        Effect = "Allow"
+        Action = [
+          "eks:*"
+        ]
+        Resource = "*"
+      },
+      {
+        # Autoscaling for EKS node groups
+        Effect = "Allow"
+        Action = [
+          "autoscaling:*"
+        ]
+        Resource = "*"
+      },
+      {
+        # KMS for cluster encryption (optional, for future use)
+        Effect = "Allow"
+        Action = [
+          "kms:CreateKey",
+          "kms:CreateAlias",
+          "kms:DescribeKey",
+          "kms:GetKeyPolicy",
+          "kms:PutKeyPolicy",
+          "kms:ScheduleKeyDeletion",
+          "kms:TagResource",
+          "kms:UntagResource",
+          "kms:ListAliases"
+        ]
+        Resource = "*"
+      },
+      {
+        # SQS for Karpenter spot termination handling
+        Effect = "Allow"
+        Action = [
+          "sqs:*"
+        ]
+        Resource = "*"
+      },
+      {
+        # Additional IAM operations for IRSA and EKS node roles
+        Effect = "Allow"
+        Action = [
+          "iam:CreatePolicy",
+          "iam:DeletePolicy",
+          "iam:GetPolicy",
+          "iam:ListPolicyVersions",
+          "iam:CreatePolicyVersion",
+          "iam:DeletePolicyVersion",
+          "iam:CreateInstanceProfile",
+          "iam:DeleteInstanceProfile",
+          "iam:GetInstanceProfile",
+          "iam:AddRoleToInstanceProfile",
+          "iam:RemoveRoleFromInstanceProfile",
+          "iam:TagPolicy",
+          "iam:UntagPolicy",
+          "iam:TagInstanceProfile",
+          "iam:UntagInstanceProfile",
+          "iam:CreateOpenIDConnectProvider",
+          "iam:DeleteOpenIDConnectProvider",
+          "iam:GetOpenIDConnectProvider",
+          "iam:TagOpenIDConnectProvider",
+          "iam:UntagOpenIDConnectProvider"
+        ]
+        Resource = "*"
       }
     ]
   })

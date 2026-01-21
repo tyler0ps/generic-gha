@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-golang
+  namespace: staging
+  labels:
+    app: api-golang
+    environment: staging
+spec:
+  replicas: 1  # Start with 1 for cost optimization
+  selector:
+    matchLabels:
+      app: api-golang
+  template:
+    metadata:
+      labels:
+        app: api-golang
+        environment: staging
+        compute-type: fargate  # Use Fargate for this service
+    spec:
+      containers:
+      - name: api-golang
+        # TODO: Replace with your actual ECR account ID
+        image: <ECR_ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/api-golang:staging
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+
+        env:
+        - name: PORT
+          value: "8080"
+        - name: GIN_MODE
+          value: "release"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-credentials
+              key: connection-string
+
+        # COST OPTIMIZATION: Minimal but sufficient resources
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /api/golang/ping
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /api/golang/ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+
+      # Optional: Specify service account for IRSA (Phase 2)
+      # serviceAccountName: api-golang
