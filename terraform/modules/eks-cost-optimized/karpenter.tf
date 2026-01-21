@@ -72,8 +72,8 @@ resource "helm_release" "karpenter" {
       value = "karpenter.sh/controller"
     },
     {
-      name  = "tolerations[0].value"
-      value = "true"
+      name  = "tolerations[0].operator"
+      value = "Exists"
     },
     {
       name  = "tolerations[0].effect"

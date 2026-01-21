@@ -19,16 +19,16 @@ module "eks" {
   enable_irsa = true
 
   # Cluster encryption (optional, can be enabled later)
-  cluster_encryption_config = {
-    resources        = var.enable_cluster_encryption ? ["secrets"] : []
-    provider_key_arn = var.enable_cluster_encryption ? var.kms_key_arn : ""
-  }
+  # cluster_encryption_config = var.enable_cluster_encryption ? {
+  #   resources        = ["secrets"]
+  #   provider_key_arn = var.kms_key_arn
+  # } : {}
 
   # Minimal initial node group for Karpenter and system pods
   eks_managed_node_groups = {
     karpenter = {
-      # ARM-based instances for cost savings (20% cheaper than x86)
-      instance_types = ["t4g.small"]
+      # x86_64 instances for compatibility with AL2023_x86_64_STANDARD AMI
+      instance_types = ["t3.medium"]
 
       # Use SPOT for cost optimization
       capacity_type = "SPOT"
@@ -43,11 +43,11 @@ module "eks" {
         role = "karpenter"
       }
 
-      taints = [{
-        key    = "karpenter.sh/controller"
-        value  = "true"
-        effect = "NO_SCHEDULE"
-      }]
+      # taints = [{
+      #   key    = "karpenter.sh/controller"
+      #   value  = "true"
+      #   effect = "NO_SCHEDULE"
+      # }]
 
       # Tags for Karpenter discovery
       tags = merge(
