@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: production
+
+resources:
+  - ../../../base/client-react
+
+patchesStrategicMerge:
+  - patches.yaml
+
+commonLabels:
+  environment: production
+
+images:
+  - name: client-react-image
+    newName: <ECR_ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/client-react
+    newTag: 1.0.10

@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services-staging
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - list:
+        elements:
+          - service: api-golang
+          - service: api-node
+          - service: client-react
+          - service: load-generator-python
+
+  template:
+    metadata:
+      name: '{{.service}}-staging'
+      labels:
+        service: '{{.service}}'
+        environment: staging
+    spec:
+      project: staging
+      source:
+        repoURL: https://github.com/tyler0ps/generic-gha.git
+        targetRevision: main
+        path: 'deploy/kubernetes/overlays/staging/{{.service}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: staging
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: 3
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m

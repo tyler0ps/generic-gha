@@ -76,6 +76,22 @@ output "karpenter_queue_name" {
   value       = module.eks.karpenter_queue_name
 }
 
+# ArgoCD Outputs
+output "argocd_namespace" {
+  description = "ArgoCD namespace"
+  value       = module.argocd.namespace
+}
+
+output "argocd_admin_password_command" {
+  description = "Command to get ArgoCD admin password"
+  value       = module.argocd.admin_password_command
+}
+
+output "argocd_server_service" {
+  description = "ArgoCD server service name"
+  value       = module.argocd.server_service
+}
+
 # Common Values
 output "region" {
   description = "AWS region"

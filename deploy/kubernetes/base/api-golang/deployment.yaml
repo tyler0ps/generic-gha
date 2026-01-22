@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-golang
+  labels:
+    app: api-golang
+spec:
+  selector:
+    matchLabels:
+      app: api-golang
+  template:
+    metadata:
+      labels:
+        app: api-golang
+    spec:
+      containers:
+      - name: api-golang
+        image: api-golang-image
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+
+        env:
+        - name: PORT
+          value: "8080"
+        - name: GIN_MODE
+          value: "release"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-credentials
+              key: connection-string
+
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+
+        livenessProbe:
+          httpGet:
+            path: /api/golang/ping
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /api/golang/ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
