@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/tyler0ps/generic-gha/compare/services/go/api-golang@1.3.3...services/go/api-golang@1.4.0) (2026-01-22)
+
+
+### Features
+
+* **feature/update-service-prefixes:** update go and node path prefixes ([4885ff0](https://github.com/tyler0ps/generic-gha/commit/4885ff0af77dfec191b2138a624cef34d6c0ff0f))
+
 ## [1.3.3](https://github.com/tyler0ps/generic-gha/compare/services/go/api-golang@1.3.2...services/go/api-golang@1.3.3) (2026-01-17)
 
 

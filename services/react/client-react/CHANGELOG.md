@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/tyler0ps/generic-gha/compare/services/react/client-react@1.1.1...services/react/client-react@1.2.0) (2026-01-22)
+
+
+### Features
+
+* **client-react:** deploy react app ([1afe59c](https://github.com/tyler0ps/generic-gha/commit/1afe59c7790d5aeff49f94d10f064a79c53324a1))
+* **client-react:** reactor home page ([e47aa3e](https://github.com/tyler0ps/generic-gha/commit/e47aa3ecce03739e9f9f9060c6dd05f736355059))
+
 ## [1.1.1](https://github.com/sidpalas/capstone/compare/services/react/client-react@1.1.0...services/react/client-react@1.1.1) (2026-01-16)
 
 
