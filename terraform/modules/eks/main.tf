@@ -18,6 +18,11 @@ module "eks" {
   # Enable IRSA (IAM Roles for Service Accounts) - required for Karpenter and security
   enable_irsa = true
 
+  # Tags for node security group (used by Karpenter for discovery)
+  node_security_group_tags = {
+    "karpenter.sh/discovery" = "${var.project}-${var.environment}"
+  }
+
   # Cluster encryption (optional, can be enabled later)
   # cluster_encryption_config = var.enable_cluster_encryption ? {
   #   resources        = ["secrets"]
@@ -28,19 +33,21 @@ module "eks" {
   eks_managed_node_groups = {
     karpenter = {
       # x86_64 instances for compatibility with AL2023_x86_64_STANDARD AMI
-      instance_types = ["t3.medium"]
+      instance_types = ["m5.large"]
 
       # Use SPOT for cost optimization
       capacity_type = "SPOT"
 
       # Minimal size - just enough for Karpenter to run
       min_size     = 1
-      max_size     = 2
+      max_size     = 3
       desired_size = 1
 
       # Labels and taints to ensure only Karpenter runs here
       labels = {
-        role = "karpenter"
+          role = "karpenter"
+        # Used to ensure Karpenter runs on nodes that it does not manage
+        "karpenter.sh/controller" = "true"
       }
 
       # taints = [{
@@ -64,6 +71,7 @@ module "eks" {
     coredns = {
       most_recent = true
     }
+    eks-pod-identity-agent = {}
     kube-proxy = {
       most_recent = true
     }

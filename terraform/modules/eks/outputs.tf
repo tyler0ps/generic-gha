@@ -59,20 +59,3 @@ output "karpenter_queue_name" {
   description = "Name of SQS queue for Karpenter spot termination handling"
   value       = module.karpenter.queue_name
 }
-
-# IRSA outputs (Phase 2)
-output "external_secrets_irsa_arn" {
-  description = "ARN of IAM role for External Secrets Operator"
-  value       = var.enable_external_secrets_irsa ? module.external_secrets_irsa[0].iam_role_arn : null
-}
-
-output "alb_controller_irsa_arn" {
-  description = "ARN of IAM role for AWS Load Balancer Controller"
-  value       = var.enable_alb_controller_irsa ? module.aws_load_balancer_controller_irsa[0].iam_role_arn : null
-}
-
-# Fargate outputs
-output "fargate_pod_execution_role_arn" {
-  description = "ARN of Fargate pod execution role"
-  value       = aws_iam_role.fargate_pod_execution.arn
-}

@@ -73,7 +73,7 @@ resource "aws_route" "ecs_to_eks" {
 # ============================================================
 
 module "eks" {
-  source = "../../../modules/eks-cost-optimized"
+  source = "../../../modules/eks"
 
   project     = local.project
   environment = local.environment
@@ -86,20 +86,6 @@ module "eks" {
   # Public endpoint for easy access (no VPN needed)
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
-
-  # Fargate profiles for cost-optimized workloads
-  enable_fargate_profiles = true
-  fargate_namespace       = local.environment
-
-  # Phase 2 features (disabled for now)
-  enable_argocd_fargate_profile           = false
-  enable_external_secrets_fargate_profile = false
-  enable_external_secrets_irsa            = false
-  enable_alb_controller_irsa              = false
-
-  # AWS account information for IRSA
-  aws_region     = local.region
-  aws_account_id = data.aws_caller_identity.current.account_id
 
   tags = {
     Environment = local.environment

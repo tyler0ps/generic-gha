@@ -51,54 +51,7 @@ variable "kms_key_arn" {
 variable "karpenter_version" {
   description = "Version of Karpenter to install"
   type        = string
-  default     = "1.0.1"
-}
-
-variable "enable_fargate_profiles" {
-  description = "Enable Fargate profiles for workloads"
-  type        = bool
-  default     = true
-}
-
-variable "fargate_namespace" {
-  description = "Namespace for Fargate workloads"
-  type        = string
-  default     = "staging"
-}
-
-variable "enable_argocd_fargate_profile" {
-  description = "Enable Fargate profile for ArgoCD (Phase 2)"
-  type        = bool
-  default     = false
-}
-
-variable "enable_external_secrets_fargate_profile" {
-  description = "Enable Fargate profile for External Secrets (Phase 2)"
-  type        = bool
-  default     = false
-}
-
-variable "enable_external_secrets_irsa" {
-  description = "Enable IRSA for External Secrets Operator (Phase 2)"
-  type        = bool
-  default     = false
-}
-
-variable "enable_alb_controller_irsa" {
-  description = "Enable IRSA for AWS Load Balancer Controller"
-  type        = bool
-  default     = false
-}
-
-variable "aws_region" {
-  description = "AWS region"
-  type        = string
-  default     = "ap-southeast-1"
-}
-
-variable "aws_account_id" {
-  description = "AWS account ID"
-  type        = string
+  default     = "1.8.5"
 }
 
 variable "tags" {

@@ -29,15 +29,15 @@ module "vpc" {
 
   # Tags for EKS and Karpenter discovery
   public_subnet_tags = {
-    "kubernetes.io/role/elb"                  = 1
+    "kubernetes.io/role/elb"                      = 1
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "karpenter.sh/discovery"                  = local.cluster_name
+    "karpenter.sh/discovery"                      = local.cluster_name
   }
 
   private_subnet_tags = {
-    "kubernetes.io/role/internal-elb"         = 1
+    "kubernetes.io/role/internal-elb"             = 1
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "karpenter.sh/discovery"                  = local.cluster_name
+    "karpenter.sh/discovery"                      = local.cluster_name
   }
 
   tags = local.tags
@@ -84,9 +84,9 @@ module "eks" {
       capacity_type  = "SPOT" # Use spot for cost savings
 
       # Minimal size - just enough for Karpenter
-      min_size     = 2
+      min_size     = 1
       max_size     = 3
-      desired_size = 2
+      desired_size = 1
 
       # Labels to identify these nodes
       labels = {
