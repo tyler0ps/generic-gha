@@ -1,7 +1,0 @@
-{
-    "ref": "refs/tags/services/go/api-golang@1.1.1",
-    "ref_type": "tag",
-    "repository": {
-        "default_branch": "main"
-    }
-}
