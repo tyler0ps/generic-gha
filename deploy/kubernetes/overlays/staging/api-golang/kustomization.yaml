@@ -14,5 +14,5 @@ commonLabels:
 
 images:
   - name: api-golang-image
-    newName: <ECR_ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/api-golang
+    newName: 382027875658.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/api-golang
     newTag: 1.3.3-0019-g89447fe

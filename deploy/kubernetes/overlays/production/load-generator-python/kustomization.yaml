@@ -14,5 +14,5 @@ commonLabels:
 
 images:
   - name: load-generator-python-image
-    newName: <ECR_ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/load-generator-python
+    newName: 382027875658.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/load-generator-python
     newTag: latest
