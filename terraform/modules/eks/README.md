@@ -18,7 +18,7 @@ A cost-optimized Amazon EKS (Elastic Kubernetes Service) module with Karpenter a
   - Automatic node consolidation (removes idle nodes after 30s)
   - Instance types: c, m, r families (generation 5+)
   - Instance sizes: medium, large, xlarge
-  - Architecture: amd64
+  - Architecture: arm64
   - AMI: Amazon Linux 2023 (AL2023)
   - Spot interruption handling via SQS queue
 
@@ -183,7 +183,7 @@ Karpenter will automatically:
 - **Instance Generation**: 5+ (newer = better price/performance)
 - **Instance Sizes**: medium, large, xlarge
 - **Capacity Type**: SPOT preferred, on-demand fallback
-- **Architecture**: amd64
+- **Architecture**: arm64
 - **OS**: Linux (Amazon Linux 2023)
 - **AMI**: Latest EKS-optimized AL2023
 - **Consolidation**: After 30s of underutilization
