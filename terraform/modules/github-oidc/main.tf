@@ -199,7 +199,10 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
         ]
         Resource = [
           "arn:aws:iam::*:role/staging-*",
-          "arn:aws:iam::*:role/production-*"
+          "arn:aws:iam::*:role/production-*",
+          "arn:aws:iam::*:role/github-actions-terraform-role",
+          "arn:aws:iam::*:role/generic-gha-*",
+          "arn:aws:iam::*:role/karpenter-*"
         ]
       },
       {
@@ -297,15 +300,8 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "iam:ListPolicyVersions",
           "iam:CreatePolicyVersion",
           "iam:DeletePolicyVersion",
-          "iam:CreateInstanceProfile",
-          "iam:DeleteInstanceProfile",
-          "iam:GetInstanceProfile",
-          "iam:AddRoleToInstanceProfile",
-          "iam:RemoveRoleFromInstanceProfile",
           "iam:TagPolicy",
           "iam:UntagPolicy",
-          "iam:TagInstanceProfile",
-          "iam:UntagInstanceProfile",
           "iam:CreateOpenIDConnectProvider",
           "iam:DeleteOpenIDConnectProvider",
           "iam:GetOpenIDConnectProvider",
@@ -313,6 +309,23 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "iam:UntagOpenIDConnectProvider"
         ]
         Resource = "*"
+      },
+      {
+        # IAM instance profile operations for EKS node groups
+        Effect = "Allow"
+        Action = [
+          "iam:CreateInstanceProfile",
+          "iam:DeleteInstanceProfile",
+          "iam:GetInstanceProfile",
+          "iam:AddRoleToInstanceProfile",
+          "iam:RemoveRoleFromInstanceProfile",
+          "iam:TagInstanceProfile",
+          "iam:UntagInstanceProfile"
+        ]
+        Resource = [
+          "arn:aws:iam::*:instance-profile/generic-gha-*",
+          "arn:aws:iam::*:instance-profile/karpenter-*"
+        ]
       }
     ]
   })
