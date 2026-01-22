@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.0](https://github.com/tyler0ps/generic-gha/compare/services/node/api-node@1.1.2...services/node/api-node@1.2.0) (2026-01-22)
+
+
+### Features
+
+* **api-node:** fix db connection issue ([f1a3460](https://github.com/tyler0ps/generic-gha/commit/f1a3460529b32f2db73c5421b81c85914aa83e0a))
+* **api-node:** fix db connection issue ([0ea1d40](https://github.com/tyler0ps/generic-gha/commit/0ea1d40d8089abe438d0b188b5fb7671a3981bd9))
+* **api-node:** fix db connection issue ([2ee2d33](https://github.com/tyler0ps/generic-gha/commit/2ee2d334f46fcaf20ba1cd96d27049ce530a3091))
+* **api-node:** fix db connection issue ([c1dfe72](https://github.com/tyler0ps/generic-gha/commit/c1dfe725ac3d0c55d2ca7daf351b7e632e9761a3))
+* **feature/update-service-prefixes:** update go and node path prefixes ([4885ff0](https://github.com/tyler0ps/generic-gha/commit/4885ff0af77dfec191b2138a624cef34d6c0ff0f))
+
+
+### Chores
+
+* **feature/service-internal-communication:** node call go ([3289b6a](https://github.com/tyler0ps/generic-gha/commit/3289b6a231616bb4ba09c8c6a437655e13aaf7a2))
+* **feature/service-internal-communication:** node call go ([710fa27](https://github.com/tyler0ps/generic-gha/commit/710fa27614908281c381e5f781573fc93b5938be))
+
 ## [1.1.2](https://github.com/tyler0ps/generic-gha/compare/services/node/api-node@1.1.1...services/node/api-node@1.1.2) (2026-01-17)
 
 
