@@ -179,21 +179,25 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
         Resource = "*"
       },
       {
-        # IAM operations (for creating service roles)
+        # IAM read operations (broad access for Terraform state checks)
+        Effect = "Allow"
+        Action = [
+          "iam:Get*",
+          "iam:List*"
+        ]
+        Resource = "*"
+      },
+      {
+        # IAM write operations (scoped to specific patterns)
         Effect = "Allow"
         Action = [
           "iam:CreateRole",
           "iam:DeleteRole",
-          "iam:GetRole",
           "iam:PassRole",
           "iam:AttachRolePolicy",
           "iam:DetachRolePolicy",
           "iam:PutRolePolicy",
           "iam:DeleteRolePolicy",
-          "iam:GetRolePolicy",
-          "iam:ListAttachedRolePolicies",
-          "iam:ListRolePolicies",
-          "iam:ListInstanceProfilesForRole",
           "iam:TagRole",
           "iam:UntagRole"
         ]
@@ -291,20 +295,17 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
         Resource = "*"
       },
       {
-        # Additional IAM operations for IRSA and EKS node roles
+        # IAM policy and OIDC provider operations
         Effect = "Allow"
         Action = [
           "iam:CreatePolicy",
           "iam:DeletePolicy",
-          "iam:GetPolicy",
-          "iam:ListPolicyVersions",
           "iam:CreatePolicyVersion",
           "iam:DeletePolicyVersion",
           "iam:TagPolicy",
           "iam:UntagPolicy",
           "iam:CreateOpenIDConnectProvider",
           "iam:DeleteOpenIDConnectProvider",
-          "iam:GetOpenIDConnectProvider",
           "iam:TagOpenIDConnectProvider",
           "iam:UntagOpenIDConnectProvider"
         ]

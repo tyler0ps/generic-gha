@@ -67,6 +67,21 @@ module "eks" {
   # Allow current user to administer the cluster
   enable_cluster_creator_admin_permissions = true
 
+  # Grant GitHub Actions role access to the cluster
+  access_entries = {
+    github_actions = {
+      principal_arn = "arn:aws:iam::382027875658:role/github-actions-terraform-role"
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
   # Tag the node security group for Karpenter discovery
   node_security_group_tags = {
     "karpenter.sh/discovery" = local.cluster_name
