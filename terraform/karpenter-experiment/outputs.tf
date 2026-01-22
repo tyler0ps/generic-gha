@@ -30,6 +30,11 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
+output "cluster_certificate_authority_data" {
+  description = "Base64 encoded certificate data for cluster authentication"
+  value       = module.eks.cluster_certificate_authority_data
+}
+
 # ============================================================
 # KARPENTER INFORMATION
 # ============================================================
