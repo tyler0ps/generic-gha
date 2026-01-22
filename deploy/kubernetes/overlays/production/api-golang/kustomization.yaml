@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: production
+
+resources:
+  - ../../../base/api-golang
+
+patchesStrategicMerge:
+  - patches.yaml
+
+commonLabels:
+  environment: production
+
+images:
+  - name: api-golang-image
+    newName: 382027875658.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/api-golang
+    newTag: 1.3.3

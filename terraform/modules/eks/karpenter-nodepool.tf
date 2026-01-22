@@ -62,7 +62,7 @@ resource "kubectl_manifest" "karpenter_node_pool" {
             # Architecture - x86_64 for broad compatibility
             - key: kubernetes.io/arch
               operator: In
-              values: ["amd64"]
+              values: ["arm64"]
 
             # Operating system
             - key: kubernetes.io/os

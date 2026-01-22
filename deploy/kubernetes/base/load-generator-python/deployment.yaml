@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator-python
+  labels:
+    app: load-generator-python
+spec:
+  selector:
+    matchLabels:
+      app: load-generator-python
+  template:
+    metadata:
+      labels:
+        app: load-generator-python
+    spec:
+      containers:
+      - name: load-generator-python
+        image: load-generator-python-image
+        imagePullPolicy: IfNotPresent
+
+        env:
+        - name: TARGET_URL
+          value: "http://api-golang:8080"
+        - name: REQUESTS_PER_SECOND
+          value: "10"
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi

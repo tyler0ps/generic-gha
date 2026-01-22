@@ -97,6 +97,30 @@ module "eks" {
 }
 
 # ============================================================
+# ARGOCD
+# ============================================================
+
+module "argocd" {
+  source = "../../../modules/argocd"
+
+  project     = local.project
+  environment = local.environment
+
+  cluster_id         = module.eks.cluster_id
+  cluster_name       = module.eks.cluster_name
+  cluster_endpoint   = module.eks.cluster_endpoint
+  oidc_provider_arn  = module.eks.oidc_provider_arn
+
+  tags = {
+    Environment = local.environment
+    Project     = local.project
+    ManagedBy   = "Terraform"
+  }
+
+  depends_on = [module.eks]
+}
+
+# ============================================================
 # SECURITY GROUP RULES FOR RDS ACCESS FROM EKS
 # ============================================================
 
