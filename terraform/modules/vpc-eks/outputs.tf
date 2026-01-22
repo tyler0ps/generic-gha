@@ -1,6 +1,11 @@
 output "vpc_id" {
-  description = "ID of the VPC"
+  description = "VPC ID"
   value       = module.vpc.vpc_id
+}
+
+output "vpc_cidr_block" {
+  description = "VPC CIDR block"
+  value       = module.vpc.vpc_cidr_block
 }
 
 output "private_subnets" {
@@ -13,19 +18,24 @@ output "public_subnets" {
   value       = module.vpc.public_subnets
 }
 
-output "private_subnet_cidr_blocks" {
+output "private_subnet_cidrs" {
   description = "List of private subnet CIDR blocks"
   value       = module.vpc.private_subnets_cidr_blocks
 }
 
-output "public_subnet_cidr_blocks" {
+output "public_subnet_cidrs" {
   description = "List of public subnet CIDR blocks"
   value       = module.vpc.public_subnets_cidr_blocks
 }
 
-output "vpc_cidr_block" {
-  description = "CIDR block of the VPC"
-  value       = module.vpc.vpc_cidr_block
+output "nat_gateway_ids" {
+  description = "List of NAT Gateway IDs"
+  value       = module.vpc.natgw_ids
+}
+
+output "azs" {
+  description = "List of availability zones"
+  value       = module.vpc.azs
 }
 
 output "private_route_table_ids" {
