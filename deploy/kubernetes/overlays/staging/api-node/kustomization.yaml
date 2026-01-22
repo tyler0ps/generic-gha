@@ -15,4 +15,4 @@ commonLabels:
 images:
   - name: api-node-image
     newName: 382027875658.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/api-node
-    newTag: 1.1.2-0034-gc7b8631
+    newTag: staging

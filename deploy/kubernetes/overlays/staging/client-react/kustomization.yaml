@@ -15,4 +15,4 @@ commonLabels:
 images:
   - name: client-react-image
     newName: 382027875658.dkr.ecr.ap-southeast-1.amazonaws.com/generic-gha/client-react
-    newTag: 1.1.1-0056-ge47aa3e
+    newTag: latest
